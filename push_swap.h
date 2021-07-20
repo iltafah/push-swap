@@ -27,6 +27,7 @@ typedef struct	ps_vars
 }				ps_vars;
 
 enum e_bool {false, true};
+enum e_found {not_found = -1, found = 1};
 enum e_state {descending, ascending};
 enum e_sort {unsorted, sorted};
 enum e_value {lower, greater};

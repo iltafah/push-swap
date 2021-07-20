@@ -630,111 +630,130 @@ int		get_max(int a, int b)
 // 	return (sorted_table);
 // }
 
-t_int_vec	get_longest_inc_subseq(int *tab, int size)
+void	shift_min_to_top(t_int_vec given_stack)
+{
+	int		i;
+	int		steps;
+	int		min_num;
+
+	i = 0;
+	min_num = get_min_num(given_stack);
+	steps = find_nearest_path(given_stack, min_num);
+	if (steps > 0)
+	{
+		while (steps > 0)
+		{
+			shift_down_all_nums(&given_stack);
+			steps--;
+		}
+	}
+	else if (steps < 0)
+	{
+		while (steps < 0)
+		{
+			shift_up_all_nums(&given_stack);
+			steps++;
+		}
+	}
+}
+
+
+
+t_int_vec	get_stack_copy(t_int_vec given_stack)
+{
+	int			i;
+	t_int_vec	stack_copy;
+
+	i = 0;
+	initialize_vec_of_int(&stack_copy);
+	while (i < given_stack.used_size)
+	{
+		stack_copy.add_new_element(&stack_copy, given_stack.elements[i]);
+		i++;
+	}
+	return (stack_copy);
+}
+
+int	*get_longest_inc_subseq_order(t_int_vec given_stack, int *max_order_num)
 {
 	int			i;
 	int			j;
-	int			*tmp;
-	int			max_tmp_num;
-	t_int_vec	lis_table;
+	int			*order_table;
 
 	i = 1;
-	max_tmp_num = 1;
-	initialize_vec_of_int(&lis_table);
-	tmp = malloc(sizeof(int) * size);
-	fill_table_with_given_num(tmp, size, 1);
-	while (i < size)
+	order_table = malloc(sizeof(int) * given_stack.used_size);
+	fill_table_with_given_num(order_table, given_stack.used_size, 1);
+	while (i < given_stack.used_size)
 	{
 		j = 0;
 		while (j < i)
 		{
-			if (tab[i] > tab[j])
+			if (given_stack.elements[i] > given_stack.elements[j])
 			{
-				tmp[i] = get_max(tmp[i], (tmp[j] + 1));
-				if (tmp[i] > max_tmp_num)
-					max_tmp_num = tmp[i];
+				order_table[i] = get_max(order_table[i], (order_table[j] + 1));
+				if (order_table[i] > (*max_order_num))
+					(*max_order_num) = order_table[i];
 			}
 			j++;
 		}
 		i++;
-		for (int x = 0; x < size; x++)
-			printf(" %d", tab[x]);
-		printf("\n");
-		for (int x = 0; x < size; x++)
-			printf(" %d", tmp[x]);
-		printf("\n========================\n");
 	}
-	
-	int		curr_value;
-	
-	i = size;
-	curr_value = max_tmp_num;
+	return (order_table);
+}
+
+t_int_vec	get_longest_inc_subseq_numbers(t_int_vec given_stack)
+{
+	int			i;
+	int			j;
+	int			*order_table;
+	int			max_order_num;
+	t_int_vec	lis_table;
+
+	i = 1;
+	max_order_num = 1;
+	order_table = get_longest_inc_subseq_order(given_stack, &max_order_num);
+	initialize_vec_of_int(&lis_table);
+	i = given_stack.last_index;
 	while (i >= 0)
 	{
-		if (curr_value == tmp[i])
+		if (max_order_num == order_table[i])
 		{
-			lis_table.push_element(&lis_table, tab[i]);
-			curr_value--;
+			lis_table.push_element(&lis_table, given_stack.elements[i]);
+			max_order_num--;
 		}
 		i--;
 	}
+	free(order_table);
 	return (lis_table);
-}
-
-int		get_num(t_int_vec vec, int num)
-{
-	int		i;
-
-	i = 0;
-	while (i < vec.used_size)
-	{
-		if (vec.elements[i] == num)
-			return (i);
-		i++;
-	}
-	return (-1);
 }
 
 void	push_from_a_to_b(ps_vars *vars)
 {
 	int			i;
-	t_int_vec	longest_inc_subseq;
-
-	// int	steps = find_nearest_path(vars->stack_a, get_min_num(vars->stack_a));
-	// if (steps > 0)
-	// {
-	// 	while (steps > 0)
-	// 	{
-	// 		steps--;
-	// 	}
-	// }
-	
+	int			to_traverse;
+	t_int_vec	lngst_inc_subseq;
+	t_int_vec	stack_a_copy;
 	 
-	longest_inc_subseq = get_longest_inc_subseq(vars->stack_a.elements, vars->stack_a.used_size);
-	
-	for(int x = 0; x < longest_inc_subseq.used_size; x++)
-		printf(" %d", longest_inc_subseq.elements[x]);
-	printf("\n");
-	// i = 0;
-	// while (i < vars->stack_a.used_size)
-	// {
-	// 	if (get_num(longest_inc_subseq, vars->stack_a.elements[i]) == -1)
-	// 	{
-	// 		push_from_to(&vars->stack_a, &vars->stack_b);
-	// 		printf("pb\n");
-	// 	}
-	// 	else
-	// 	{
-	// 		printf("<%d>\n", vars->stack_a.elements[i]);
-	// 	}
-	// 	shift_up_all_nums(&vars->stack_a);
-	// 	printf("sa\n");
-	// 	i++;
-	// }
-	// printf("Stack A\n");
-	// print_stack(vars->stack_a);
-	// printf("Stack B\n");
-	// print_stack(vars->stack_b);
+	i = 0;
+	stack_a_copy = get_stack_copy(vars->stack_a);
+	shift_min_to_top(stack_a_copy);
+	lngst_inc_subseq = get_longest_inc_subseq_numbers(stack_a_copy);
+	stack_a_copy.free(&stack_a_copy);
+	to_traverse = vars->stack_a.used_size;
+	while (i < to_traverse)
+	{
+		if (find_num(lngst_inc_subseq, vars->stack_a.elements[0]) == not_found)
+		{
+			push_from_to(&vars->stack_a, &vars->stack_b);
+			printf("pb\n");
+		}
+		else
+		{
+			shift_up_all_nums(&vars->stack_a);
+			printf("ra\n");	
+		}
+		i++;
+	}
 }
 
 
@@ -751,7 +770,9 @@ int		main(int argc, char **argv)
 		check_arguments_content(argv + 1);
 		fill_stack_with_numbers(&vars.stack_a, argv + 1);
 
+		print_stack(vars.stack_a);
 		push_from_a_to_b(&vars);
+		print_stack(vars.stack_a);
 
 	}
 	else
@@ -759,3 +780,4 @@ int		main(int argc, char **argv)
 	
 	return (0);
 }
+//./push_swap 10  5  9  6  2  4  1  7  8  3
