@@ -756,8 +756,211 @@ void	push_from_a_to_b(ps_vars *vars)
 	}
 }
 
+int		find_a_movements(t_int_vec stack_a, int curr_num)
+{
+	int		i;
+	int		max_num;
+	int		last_index;
+	int		max_num_index;
 
+	i = 0;
+	max_num = get_max_num(stack_a);
+	last_index = stack_a.last_index;
+	if (curr_num > max_num)
+	{
+		max_num_index = get_index(stack_a, max_num);
+		if (max_num_index > last_index / 2)
+		{
+			// printf("last_index - i = %d - %d = %d\n", last_index, i , last_index - i);
+			return (last_index - max_num_index);
+		}
+		else
+		{
+			// printf("(i + 1) x -1 = %d\n", (i + 1) * -1);
+			return ((max_num_index + 1) * -1);
+		}
+	}
+	else if (curr_num < stack_a.elements[0] && curr_num > stack_a.elements[last_index])
+	{
+		// printf("yeah it is 0: a[last_index] = %d < curr_num = %d < a[0] = %d\n", stack_a.elements[last_index], curr_num, stack_a.elements[0]);
+		return (0);
+	
+	}
+	while (i < last_index)
+	{
+		if (curr_num > stack_a.elements[i] && curr_num < stack_a.elements[i + 1])
+		{
+			if (last_index - i < i)
+			{
+				// printf("last_index - i = %d - %d = %d\n", last_index, i , last_index - i);
+				return (last_index - i);
+			}
+			else
+			{
+				// printf("(i + 1) x -1 = %d\n", (i + 1) * -1);
+				return ((i + 1) * -1);
+			}
+		}
+		i++;
+	}
+}
 
+int		find_b_movements(t_int_vec stack_b, int num_index)
+{
+	int	up;
+	int	down;
+	int	tmp;
+
+	up = 0;
+	down = 0;
+	tmp = num_index;
+	while (tmp > 0)
+	{
+		if (tmp == stack_b.last_index + 1)
+			break ;
+		down++;
+		tmp++;
+	}
+	tmp = num_index;
+	while (tmp > 0)
+	{
+		tmp--;
+		up--;
+	}
+	// printf("up = %d  down = %d\n", up, down);
+	if ((up * -1) > (down))
+		return (down);
+	return (up);	
+}
+
+int		calculate_total_moves(int a_moves, int b_moves)
+{
+	// printf("a_moves = %d,  b_moves = %d\n", a_moves, b_moves);
+	if (a_moves < 0)
+		a_moves *= -1;
+	if (b_moves < 0)
+		b_moves *= -1;
+	return (a_moves + b_moves);
+}
+
+void	find_best_movements(ps_vars *vars)
+{
+	int		i;
+	int		curr_num;
+	int		curr_a_moves;
+	int		curr_b_moves;
+	int		curr_total_moves;
+
+	i = 1;
+	curr_num = vars->stack_b.elements[0];
+	vars->a_best_move = find_a_movements(vars->stack_a, curr_num);
+	vars->b_best_move = find_b_movements(vars->stack_b, 0);
+	// printf("meow b_best_move = %d\n", vars->b_best_move);
+	vars->total_moves = calculate_total_moves(vars->a_best_move, vars->a_best_move);
+	while (i < vars->stack_b.used_size)
+	{
+		curr_num = vars->stack_b.elements[i];
+		curr_a_moves = find_a_movements(vars->stack_a, curr_num);
+		curr_b_moves = find_b_movements(vars->stack_b, i);
+		curr_total_moves = calculate_total_moves(curr_a_moves, curr_b_moves);
+		if (curr_total_moves < vars->total_moves)
+		{
+			// printf("curr_total_moves = %d < old_total_moves = %d\n", curr_total_moves, vars->total_moves);
+			vars->a_best_move = curr_a_moves;
+			vars->b_best_move = curr_b_moves;
+			vars->total_moves = curr_total_moves;
+		}
+		i++;
+	}
+}
+
+// void	do_best_move()
+// {
+
+// }
+
+void	retrieve_best_num(ps_vars *vars)
+{
+	while (vars->a_best_move != 0 || vars->b_best_move != 0)
+	{
+		if (vars->a_best_move > 0 && vars->b_best_move > 0)
+		{
+			shift_down_all_nums(&vars->stack_a);
+			shift_down_all_nums(&vars->stack_b);
+			vars->a_best_move--;
+			vars->b_best_move--;
+			printf("rrr\n");
+		}
+		else if (vars->a_best_move < 0 && vars->b_best_move < 0)
+		{
+			shift_up_all_nums(&vars->stack_a);
+			shift_up_all_nums(&vars->stack_b);
+			vars->a_best_move++;
+			vars->b_best_move++;
+			printf("rr\n");
+		}
+		else if (vars->a_best_move > 0)
+		{
+			shift_down_all_nums(&vars->stack_a);
+			printf("rra\n");
+			vars->a_best_move--;
+		}
+		else if (vars->a_best_move < 0)
+		{
+			shift_up_all_nums(&vars->stack_a);
+			printf("ra\n");
+			vars->a_best_move++;
+		}
+		else if (vars->b_best_move > 0)
+		{
+			shift_down_all_nums(&vars->stack_b);
+			printf("rrb\n");
+			vars->b_best_move--;
+		}
+		else if (vars->b_best_move < 0)
+		{
+			shift_up_all_nums(&vars->stack_b);
+			printf("rb\n");
+			vars->b_best_move++;
+		}
+	}
+	push_from_to(&vars->stack_b, &vars->stack_a);
+	printf("pa\n");
+}
+
+void	retrieve_nums_from_b_in_order(ps_vars *vars)
+{
+	while (vars->stack_b.used_size > 0)
+	{
+		find_best_movements(vars);
+		retrieve_best_num(vars);
+		// printf("stack a: ");
+		// print_stack(vars->stack_a);
+		// printf("stack b: ");
+		// print_stack(vars->stack_b);
+	}
+}
+
+void	sort_stack_a(ps_vars *vars)
+{
+	int		steps;
+	int		min_num;
+
+	min_num = get_min_num(vars->stack_a);
+	steps = find_nearest_path(vars->stack_a, min_num);
+	while (steps > 0)
+	{
+		shift_down_all_nums(&vars->stack_a);
+		printf("rra\n");
+		steps--;
+	}
+	while (steps < 0)
+	{
+		shift_up_all_nums(&vars->stack_a);
+		printf("ra\n");
+		steps++;
+	}
+}
 
 int		main(int argc, char **argv)
 {
@@ -765,15 +968,24 @@ int		main(int argc, char **argv)
 
 	if (argc > 1)
 	{
+		vars.total_moves = 0;
+		vars.median = 0;
+		vars.a_best_move = 0;
+		vars.b_best_move = 0;
 		initialize_vec_of_int(&vars.stack_a);
 		initialize_vec_of_int(&vars.stack_b);
 		check_arguments_content(argv + 1);
 		fill_stack_with_numbers(&vars.stack_a, argv + 1);
 
-		print_stack(vars.stack_a);
+		// print_stack(vars.stack_a);
 		push_from_a_to_b(&vars);
-		print_stack(vars.stack_a);
 
+		retrieve_nums_from_b_in_order(&vars);
+		sort_stack_a(&vars);
+		// printf("stack a: ");
+		// print_stack(vars.stack_a);
+		// printf("stack b: ");
+		// print_stack(vars.stack_b);
 	}
 	else
 		ft_putstr_fd("Error\n", STDERR_FILENO);

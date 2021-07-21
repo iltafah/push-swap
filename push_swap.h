@@ -24,6 +24,9 @@ typedef struct	ps_vars
 	float		median;
 	t_int_vec	stack_a;
 	t_int_vec	stack_b;
+	int			a_best_move;
+	int			b_best_move;
+	int			total_moves;
 }				ps_vars;
 
 enum e_bool {false, true};
