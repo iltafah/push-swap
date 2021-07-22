@@ -21,7 +21,6 @@
 # include "./vectors/vectors.h"
 typedef struct	ps_vars
 {
-	float		median;
 	t_int_vec	stack_a;
 	t_int_vec	stack_b;
 	int			a_best_move;
