@@ -1,13 +1,25 @@
-#include "./push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   find_best_movements.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/14 09:23:11 by iltafah           #+#    #+#             */
+/*   Updated: 2021/09/15 09:53:26 by iltafah          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		absolute_value(int num)
+#include "../push_swap.h"
+
+int	absolute_value(int num)
 {
 	if (num < 0)
 		return (num * -1);
 	return (num);
 }
 
-int		calc_total_moves(int a_moves, int b_moves)
+int	calc_total_moves(int a_moves, int b_moves)
 {
 	if (a_moves * b_moves > 0)
 	{
@@ -19,7 +31,7 @@ int		calc_total_moves(int a_moves, int b_moves)
 	return (absolute_value(a_moves) + absolute_value(b_moves));
 }
 
-int		find_a_movements(t_int_vec stack_a, int num)
+int	find_a_movements(t_int_vec stack_a, int num)
 {
 	int		i;
 	int		min_num;
@@ -44,14 +56,15 @@ int		find_a_movements(t_int_vec stack_a, int num)
 			return (find_nearest_path(stack_a, i + 1));
 		i++;
 	}
+	return (0);
 }
 
-int		find_b_movements(t_int_vec stack_b, int num_index)
+int	find_b_movements(t_int_vec stack_b, int num_index)
 {
 	return (find_nearest_path(stack_b, num_index));
 }
 
-void	find_best_movements(ps_vars *vars)
+void	find_best_movements(t_ps_vars *vars)
 {
 	int		index;
 	int		curr_num;

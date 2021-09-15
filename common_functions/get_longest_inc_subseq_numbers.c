@@ -1,10 +1,22 @@
-#include "./push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_longest_inc_subseq_numbers.c                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/14 09:23:37 by iltafah           #+#    #+#             */
+/*   Updated: 2021/09/15 09:59:01 by iltafah          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		get_max(int a, int b)
+#include "../push_swap.h"
+
+int	get_max(int a, int b)
 {
 	if (a > b)
 		return (a);
-	return (b);	
+	return (b);
 }
 
 void	fill_table_with_given_num(int *tab, int size, int num)

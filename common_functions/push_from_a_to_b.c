@@ -1,4 +1,16 @@
-#include "./push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_from_a_to_b.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/14 09:23:56 by iltafah           #+#    #+#             */
+/*   Updated: 2021/09/15 09:53:43 by iltafah          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../push_swap.h"
 
 void	shift_min_to_top(t_int_vec given_stack)
 {
@@ -44,11 +56,11 @@ t_int_vec	get_stack_copy(t_int_vec given_stack)
 	return (stack_copy);
 }
 
-void	push_from_a_to_b(ps_vars *vars)
+void	push_from_a_to_b(t_ps_vars *vars)
 {
 	t_int_vec	lngst_inc_subseq;
 	t_int_vec	stack_a_copy;
-	 
+
 	stack_a_copy = get_stack_copy(vars->stack_a);
 	shift_min_to_top(stack_a_copy);
 	lngst_inc_subseq = get_longest_inc_subseq_numbers(stack_a_copy);
@@ -63,7 +75,7 @@ void	push_from_a_to_b(ps_vars *vars)
 		else
 		{
 			shift_up_all_nums(&vars->stack_a);
-			ft_putstr_fd("ra\n", STDOUT_FILENO);	
+			ft_putstr_fd("ra\n", STDOUT_FILENO);
 		}
 	}
 }
