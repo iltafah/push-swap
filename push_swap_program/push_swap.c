@@ -6,11 +6,11 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 21:27:01 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/15 10:23:05 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/09/17 09:54:28 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./push_swap.h"
+#include "../push_swap.h"
 
 int	main(int argc, char **argv)
 {

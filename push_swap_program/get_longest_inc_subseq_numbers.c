@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 09:23:37 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/15 09:59:01 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/09/16 15:40:18 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	*get_longest_inc_subseq_order(t_int_vec given_stack, int *max_order_num)
 t_int_vec	get_longest_inc_subseq_numbers(t_int_vec given_stack)
 {
 	int			i;
-	int			j;
 	int			*order_table;
 	int			max_order_num;
 	t_int_vec	lis_table;

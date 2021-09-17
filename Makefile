@@ -4,83 +4,75 @@ CHECKER = checker
 
 LIB = libft
 
+FLAGS = -Wall -Wextra -Werror
 
-FLAGS = #-Wall -Wextra -Werror
+PS_SRC = push_swap_program/push_swap.c  \
+push_swap_program/find_num.c             \
+push_swap_program/get_index.c             \
+push_swap_program/get_min_num.c            \
+push_swap_program/get_max_num.c             \
+push_swap_program/sort_stack_a.c             \
+push_swap_program/swap_and_sort.c             \
+push_swap_program/push_from_a_to_b.c           \
+push_swap_program/find_nearest_path.c           \
+push_swap_program/retrieve_best_num.c            \
+push_swap_program/find_best_movements.c           \
+push_swap_program/is_it_sorted_circularly.c        \
+push_swap_program/get_longest_inc_subseq_numbers.c
 
-PS_SRC = ./common_functions/find_num.c \
-./common_functions/swap_and_sort.c \
-./common_functions/check_duplication.c \
-./common_functions/get_index.c \
-./common_functions/instructions_funcs_first_set.c \
-./common_functions/instructions_funcs_second_set.c \
-./common_functions/get_max_num.c \
-./common_functions/push_from_a_to_b.c \
-./common_functions/sort_stack_a.c \
-./common_functions/get_longest_inc_subseq_numbers.c \
-./common_functions/find_best_movements.c \
-./common_functions/fill_stack_with_given_numbers.c \
-./common_functions/is_it_sorted_circularly.c \
-./common_functions/find_nearest_path.c \
-./common_functions/retrieve_best_num.c \
-./common_functions/get_min_num.c \
-./vector_of_int/add_new_int_at_index.c \
-./vector_of_int/add_new_int.c \
-./vector_of_int/delete_int_at_index.c \
-./vector_of_int/initialize_vec_of_int.c \
-./vector_of_int/pop_int.c \
-./vector_of_int/push_int.c \
-./vector_of_int/realloc_int_vector.c \
-./vector_of_int/replace_int_at_index.c \
-./push_swap.c
+CH_SRC = checker_program/checker.c            \
+checker_program/hash_table/get_value.c         \
+checker_program/hash_table/hash_func.c          \
+checker_program/hash_table/insert_value.c        \
+checker_program/get_next_line/get_next_line.c     \
+checker_program/hash_table/initialize_hashtable.c  \
+checker_program/get_next_line/get_next_line_utils.c
 
-CH_SRC = ./common_functions/find_num.c \
-./common_functions/get_index.c \
-./common_functions/get_max_num.c \
-./common_functions/sort_stack_a.c \
-./common_functions/swap_and_sort.c \
-./common_functions/push_from_a_to_b.c \
-./common_functions/check_duplication.c \
-./common_functions/find_nearest_path.c \
-./common_functions/retrieve_best_num.c \
-./common_functions/instructions_funcs_first_set.c \
-./common_functions/instructions_funcs_second_set.c \
-./common_functions/find_best_movements.c \
-./common_functions/is_it_sorted_circularly.c \
-./common_functions/fill_stack_with_given_numbers.c \
-./common_functions/get_longest_inc_subseq_numbers.c \
-./common_functions/get_min_num.c \
-./get_next_line/get_next_line.c \
-./get_next_line/get_next_line_utils.c \
-./vector_of_int/pop_int.c \
-./vector_of_int/push_int.c \
-./vector_of_int/add_new_int.c \
-./vector_of_int/realloc_int_vector.c \
-./vector_of_int/delete_int_at_index.c \
-./vector_of_int/add_new_int_at_index.c \
-./vector_of_int/replace_int_at_index.c \
-./vector_of_int/initialize_vec_of_int.c \
-./checker_program/execute_instructions.c \
-./checker_program/checker.c
+COMMON_FUNC = common_functions/check_duplication.c \
+common_functions/instructions_funcs_first_set.c     \
+common_functions/instructions_funcs_second_set.c     \
+common_functions/fill_stack_with_given_numbers.c
 
-PS_OBJ = $(PS_SRC:.c=.o)
 
-CH_OBJ = $(CH_SRC:.c=.o)
+INT_VECTOR_FUNC = vector_of_int/push_int.c \
+vector_of_int/pop_int.c                     \
+vector_of_int/add_new_int.c                  \
+vector_of_int/realloc_int_vector.c            \
+vector_of_int/delete_int_at_index.c            \
+vector_of_int/add_new_int_at_index.c            \
+vector_of_int/replace_int_at_index.c             \
+vector_of_int/initialize_vec_of_int.c
 
-all: $(NAME) 
-	
-$(NAME): $(PS_OBJ)
+HDRS = push_swap.h \
+checker_program/hash_table/hash_table.h
+
+OBJS_DIR = ./objs
+
+PS_OBJS = $(addprefix $(OBJS_DIR)/, $(PS_SRC:.c=.o))
+
+CH_OBJS = $(addprefix $(OBJS_DIR)/, $(CH_SRC:.c=.o))
+
+COMMON_FUNC_OBJS = $(addprefix $(OBJS_DIR)/, $(COMMON_FUNC:.c=.o))
+
+INT_VECTOR_FUNC_OBJS = $(addprefix $(OBJS_DIR)/, $(INT_VECTOR_FUNC:.c=.o))
+
+all: $(NAME) $(CHECKER)
+
+$(NAME): $(PS_OBJS) $(COMMON_FUNC_OBJS) $(INT_VECTOR_FUNC_OBJS)
 	make -sC ./libft
 	gcc -o $@ $^ ./libft/libft.a
 
-$(CHECKER): $(CH_OBJ)
+$(CHECKER): $(CH_OBJS) $(COMMON_FUNC_OBJS) $(INT_VECTOR_FUNC_OBJS)
 	make -sC ./libft
 	gcc -o $@ $^ ./libft/libft.a
 
-%.o : %.c
-	gcc $(FLAGS) -o $@ -c $^
+$(OBJS_DIR)/%.o : %.c $(HDRS)
+	@mkdir -p $(dir $@)
+	gcc $(FLAGS) -o $@ -c $<
 
 clean:
-	rm -f $(PS_OBJ) $(CH_OBJ)
+	rm -f $(PS_OBJS) $(CH_OBJS) $(COMMON_FUNC_OBJS) $(INT_VECTOR_FUNC_OBJS)
+	rm -rf $(OBJS_DIR)
 	make fclean -sC ./libft
 
 fclean: clean

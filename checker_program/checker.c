@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 09:22:51 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/15 17:37:16 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/09/17 12:52:34 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,84 +30,63 @@ int	is_stack_sorted(t_int_vec given_stack)
 	return (sorted);
 }
 
+void	execute_instructions(t_map *map, t_ps_vars *vars, char *instruction)
+{
+	t_func_ptr	*func_to_exec;
+
+	func_to_exec = get_value(map, instruction);
+	if (func_to_exec == NULL)
+	{
+		ft_putstr_fd("Error\n", STDERR_FILENO);
+		exit(1);
+	}
+	if (func_to_exec->args == stack_a)
+		func_to_exec->proto.first(&vars->stack_a);
+	else if (func_to_exec->args == stack_b)
+		func_to_exec->proto.first(&vars->stack_b);
+	else if (func_to_exec->args == stack_a_b)
+		func_to_exec->proto.second(&vars->stack_a, &vars->stack_b);
+	else if (func_to_exec->args == stack_b_a)
+		func_to_exec->proto.second(&vars->stack_b, &vars->stack_a);
+}
+
+void	fill_hashtable_with_appropriate_data(t_map *map)
+{
+	int					i;
+	static char			*instructions[11] = {
+		"sa", "sb", "ss",
+		"ra", "rb", "rr",
+		"rra", "rrb", "rrr",
+		"pa", "pb"
+		};
+	static t_func_ptr	arr[11] = {
+		{.args = stack_a,	.proto.first = swap_top_two_nums},
+		{.args = stack_b,	.proto.first = swap_top_two_nums},
+		{.args = stack_a_b,	.proto.second = swap_both_stacks},
+		{.args = stack_a,	.proto.first = shift_up_all_nums},
+		{.args = stack_b,	.proto.first = shift_up_all_nums},
+		{.args = stack_a_b,	.proto.second = shift_up_both_stacks},
+		{.args = stack_a,	.proto.first = shift_down_all_nums},
+		{.args = stack_b,	.proto.first = shift_down_all_nums},
+		{.args = stack_a_b,	.proto.second = shift_down_both_stacks},
+		{.args = stack_b_a,	.proto.second = push_from_to},
+		{.args = stack_a_b,	.proto.second = push_from_to}
+		};
+
+	i = -1;
+	while (++i < 11)
+		insert_value(map, instructions[i], &arr[i]);
+}
+
 void	process_given_instructions(t_ps_vars *vars)
 {
-	t_func_ptr	*func_ptr;
-	t_map		*map;
-
-	initialize_hashtable(&map);
-	
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = first;
-	func_ptr->args = stack_a;
-	func_ptr->proto.first = swap_top_two_nums;
-	insert_value(map, "sa", func_ptr);
-	
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = first;
-	func_ptr->args = stack_b;
-	func_ptr->proto.first = swap_top_two_nums;
-	insert_value(map, "sb", func_ptr);
-	
-
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = first;
-	func_ptr->args = stack_a;
-	func_ptr->proto.first = shift_up_all_nums;
-	insert_value(map, "ra", func_ptr);
-	
-
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = first;
-	func_ptr->args = stack_b;
-	func_ptr->proto.first = shift_up_all_nums;
-	insert_value(map, "rb", func_ptr);
-
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = first;
-	func_ptr->args = stack_a;
-	func_ptr->proto.first = shift_down_all_nums;
-	insert_value(map, "rra", func_ptr);
-	
-
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = first;
-	func_ptr->args = stack_b;
-	func_ptr->proto.first = shift_down_all_nums;
-	insert_value(map, "rrb", func_ptr);
-	
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = second;
-	func_ptr->args = stack_a_b;
-	func_ptr->proto.second = shift_up_both_stacks;
-	insert_value(map, "rr", func_ptr);
-	
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = second;
-	func_ptr->args = stack_a_b;
-	func_ptr->proto.second = shift_down_both_stacks;
-	insert_value(map, "rrr", func_ptr);
-	
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = second;
-	func_ptr->args = stack_a_b;
-	func_ptr->proto.second = push_from_to;
-	insert_value(map, "pb", func_ptr);
-	
-	func_ptr = malloc(sizeof(t_func_ptr));
-	func_ptr->type = second;
-	func_ptr->args = stack_b_a;
-	func_ptr->proto.second = push_from_to;
-	insert_value(map, "pa", func_ptr);
-
-
-
-
-	
+	t_map	*map;
 	int		ret_num;
 	char	*line;
 
 	line = NULL;
+	initialize_hashtable(&map);
+	fill_hashtable_with_appropriate_data(map);
 	while (true)
 	{
 		ret_num = get_next_line(STDIN_FILENO, &line);
