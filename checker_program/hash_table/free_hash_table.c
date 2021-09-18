@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hash_func.c                                        :+:      :+:    :+:   */
+/*   free_hash_table.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/16 13:52:59 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/17 16:15:14 by iltafah          ###   ########.fr       */
+/*   Created: 2021/09/17 14:26:31 by iltafah           #+#    #+#             */
+/*   Updated: 2021/09/17 16:20:43 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./hash_table.h"
 
-int	hash_func(char *key)
+void	free_hash_table(t_map **map)
 {
-	int	i;
-	int	hashed_key;
+	int		i;
+	t_item	*curr_item_node;
+	t_item	*next_item_node;
 
 	i = 0;
-	hashed_key = 0;
-	while (key[i] != '\0')
+	while (i < MAP_SIZE)
 	{
-		hashed_key += (key[i] * 31);
+		if ((*map)[i].is_occupied == true)
+		{
+			curr_item_node = (*map)[i].item;
+			while (curr_item_node != NULL)
+			{
+				next_item_node = curr_item_node->next;
+				free(curr_item_node);
+				curr_item_node = next_item_node;
+			}
+		}
 		i++;
 	}
-	return (hashed_key);
+	free(*map);
+	*map = NULL;
 }

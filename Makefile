@@ -17,15 +17,17 @@ push_swap_program/push_from_a_to_b.c           \
 push_swap_program/find_nearest_path.c           \
 push_swap_program/retrieve_best_num.c            \
 push_swap_program/find_best_movements.c           \
-push_swap_program/is_it_sorted_circularly.c        \
+push_swap_program/sort_six_nums_and_less.c         \
+push_swap_program/is_it_sorted_circularly.c         \
 push_swap_program/get_longest_inc_subseq_numbers.c
 
 CH_SRC = checker_program/checker.c            \
 checker_program/hash_table/get_value.c         \
 checker_program/hash_table/hash_func.c          \
 checker_program/hash_table/insert_value.c        \
-checker_program/get_next_line/get_next_line.c     \
-checker_program/hash_table/initialize_hashtable.c  \
+checker_program/hash_table/free_hash_table.c      \
+checker_program/get_next_line/get_next_line.c      \
+checker_program/hash_table/initialize_hashtable.c   \
 checker_program/get_next_line/get_next_line_utils.c
 
 COMMON_FUNC = common_functions/check_duplication.c \

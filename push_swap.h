@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 21:27:25 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/17 08:32:17 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/09/18 12:39:15 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,13 @@ int				is_curr_arg_int(char *arg);
 void			print_stack(t_int_vec stack);
 int				get_min_num(t_int_vec stack);
 int				get_max_num(t_int_vec stack);
-void			sort_stack_a(t_ps_vars *vars);
-void			swap_and_sort(t_ps_vars *vars);
+void			sort_stack_a(t_int_vec *stack_a);
+void			swap_and_sort(t_int_vec *stack_a);
 t_func_ptr		*get_value(t_map *map, char *key);
 void			push_from_a_to_b(t_ps_vars *vars);
 void			find_best_movements(t_ps_vars *vars);
 void			initialize_hashtable(t_map **map_add);
+void			sort_six_nums_and_less(t_ps_vars *vars);
 void			check_duplication(t_int_vec given_stack);
 int				find_num(t_int_vec given_stack, int num);
 int				get_index(t_int_vec given_stack, int num);

@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 09:23:11 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/15 09:53:26 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/09/18 13:19:11 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	find_a_movements(t_int_vec stack_a, int num)
 	min_num = get_min_num(stack_a);
 	max_num = get_max_num(stack_a);
 	last_index = stack_a.last_index;
-	if (num > max_num)
+	if (num > max_num || num < min_num)
 	{
 		min_num_index = get_index(stack_a, min_num);
 		return (find_nearest_path(stack_a, min_num_index));

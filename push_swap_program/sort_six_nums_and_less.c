@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hash_func.c                                        :+:      :+:    :+:   */
+/*   sort_six_nums_and_less.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/16 13:52:59 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/17 16:15:14 by iltafah          ###   ########.fr       */
+/*   Created: 2021/09/18 11:23:09 by iltafah           #+#    #+#             */
+/*   Updated: 2021/09/18 13:10:49 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./hash_table.h"
+#include "../push_swap.h"
 
-int	hash_func(char *key)
+void	sort_six_nums_and_less(t_ps_vars *vars)
 {
-	int	i;
-	int	hashed_key;
-
-	i = 0;
-	hashed_key = 0;
-	while (key[i] != '\0')
+	while (vars->stack_a.used_size > 3)
 	{
-		hashed_key += (key[i] * 31);
-		i++;
+		push_from_to(&vars->stack_a, &vars->stack_b);
+		ft_putstr_fd("pb\n", STDOUT_FILENO);
 	}
-	return (hashed_key);
+	swap_and_sort(&vars->stack_a);
+	retrieve_nums_from_b_in_perfect_spot(vars);
+	sort_stack_a(&vars->stack_a);
 }

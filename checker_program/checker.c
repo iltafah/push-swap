@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 09:22:51 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/17 12:52:34 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/09/17 14:47:56 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,10 @@ void	process_given_instructions(t_ps_vars *vars)
 	{
 		ret_num = get_next_line(STDIN_FILENO, &line);
 		if (ret_num != 1)
+		{
+			free(line);
 			break ;
+		}
 		execute_instructions(map, vars, line);
 		free(line);
 	}
@@ -101,6 +104,7 @@ void	process_given_instructions(t_ps_vars *vars)
 		exit(1);
 	}
 	ft_putstr_fd("OK\n", STDOUT_FILENO);
+	free_hash_table(&map);
 }
 
 int	main(int argc, char **argv)

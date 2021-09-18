@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 10:52:06 by iltafah           #+#    #+#             */
-/*   Updated: 2021/09/17 12:52:58 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/09/17 14:36:43 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ struct s_map
 };
 
 int			hash_func(char *key);
+void		free_hash_table(t_map **map);
 t_func_ptr	*get_value(t_map *map, char *key);
 void		initialize_hashtable(t_map **map_add);
 void		insert_value(t_map *map, char *key, t_func_ptr *value);
